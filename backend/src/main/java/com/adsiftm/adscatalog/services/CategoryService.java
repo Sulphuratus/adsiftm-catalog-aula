@@ -1,6 +1,7 @@
 package com.adsiftm.adscatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adsiftm.adscatalog.dto.CategoryDTO;
 import com.adsiftm.adscatalog.entities.Category;
 import com.adsiftm.adscatalog.repositories.CategoryRepository;
+import com.adsiftm.adscatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -36,5 +38,13 @@ public class CategoryService {
 		
 		return listDto;*/
 	}
+
+	@Transactional(readOnly = true)
+	public CategoryDTO findById(Long id) {
+		Optional<Category> obj = repository.findById(id);
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+		return new CategoryDTO(entity);
+	}
+
 	
 }
